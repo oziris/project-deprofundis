@@ -1,0 +1,73 @@
+package kinect.storage;
+
+option java_package = "kinect.storage";
+option java_outer_classname = "KinectStorageProtos";
+
+
+message Point3D {
+    required float X = 1;
+    required float Y = 2;
+    required float Z = 3;
+}
+
+message Joint {
+    optional Point3D realWorld = 1;
+    optional Point3D projective = 2;
+    optional float confidence = 3; 
+
+   enum JointType {
+        HEAD = 1;
+        NECK = 2;
+        TORSO = 3;
+        WAIST = 4;
+
+        LEFT_COLLAR = 5;
+        LEFT_SHOULDER = 6;
+        LEFT_ELBOW = 7;
+        LEFT_WRIST = 8;
+        LEFT_HAND = 9;
+        LEFT_FINGERTIP = 10;
+
+        RIGHT_COLLAR = 11;
+        RIGHT_SHOULDER = 12;
+        RIGHT_ELBOW = 13;
+        RIGHT_WRIST = 14;
+        RIGHT_HAND = 15;
+        RIGHT_FINGERTIP	= 16;
+
+        LEFT_HIP = 17;
+        LEFT_KNEE = 18;
+        LEFT_ANKLE = 19;
+        LEFT_FOOT = 20;
+
+        RIGHT_HIP = 21;
+        RIGHT_KNEE = 22;
+        RIGHT_ANKLE = 23;
+        RIGHT_FOOT = 24;
+    }
+
+    required JointType type = 4;
+}
+
+message Skeleton {
+    repeated Joint joints = 1;
+    optional Point3D CoM = 2;
+}
+
+message FOV {
+    optional double fHFOV = 1;
+    optional double fVFOV = 2;
+}
+
+message Frame {
+    optional int32 number  = 1;
+    optional Skeleton skeleton = 2;
+    optional FOV fov = 3;
+    optional string label = 4;
+}
+
+message Sequence {
+    optional string name = 1;
+    repeated Frame frame = 2;
+	optional string label = 3;
+}

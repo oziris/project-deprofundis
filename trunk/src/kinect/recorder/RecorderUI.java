@@ -107,10 +107,6 @@ public class RecorderUI extends javax.swing.JFrame {
         jButtonStart = new javax.swing.JButton();
         jButtonNewSequence = new javax.swing.JButton();
         jButtonReset = new javax.swing.JButton();
-        jPanelRGBPref = new javax.swing.JPanel();
-        jCheckBoxRGB = new javax.swing.JCheckBox();
-        jCheckBoxRGBSkeleton = new javax.swing.JCheckBox();
-        jPanelInfo = new javax.swing.JPanel();
         jPanelData = new javax.swing.JPanel();
         jLabelPath = new javax.swing.JLabel();
         jTextFieldPath = new javax.swing.JTextField();
@@ -137,6 +133,7 @@ public class RecorderUI extends javax.swing.JFrame {
                 jCheckBoxDepthActionPerformed(evt);
             }
         });
+        jPanelDepthPref.add(jCheckBoxDepth);
 
         jCheckBoxDepthSkeleton.setSelected(true);
         jCheckBoxDepthSkeleton.setText("Skeleton Image");
@@ -145,29 +142,7 @@ public class RecorderUI extends javax.swing.JFrame {
                 jCheckBoxDepthSkeletonActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout jPanelDepthPrefLayout = new javax.swing.GroupLayout(jPanelDepthPref);
-        jPanelDepthPref.setLayout(jPanelDepthPrefLayout);
-        jPanelDepthPrefLayout.setHorizontalGroup(
-            jPanelDepthPrefLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelDepthPrefLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBoxDepth)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBoxDepthSkeleton)
-                .addContainerGap(18, Short.MAX_VALUE))
-        );
-
-        jPanelDepthPrefLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jCheckBoxDepth, jCheckBoxDepthSkeleton});
-
-        jPanelDepthPrefLayout.setVerticalGroup(
-            jPanelDepthPrefLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelDepthPrefLayout.createSequentialGroup()
-                .addGroup(jPanelDepthPrefLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBoxDepth)
-                    .addComponent(jCheckBoxDepthSkeleton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        jPanelDepthPref.add(jCheckBoxDepthSkeleton);
 
         jPanelRecording.setBorder(javax.swing.BorderFactory.createTitledBorder("Recording"));
 
@@ -343,55 +318,6 @@ public class RecorderUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanelRGBPref.setBorder(javax.swing.BorderFactory.createTitledBorder("RGB Generator"));
-
-        jCheckBoxRGB.setText("RGB Image");
-        jCheckBoxRGB.setEnabled(false);
-        jCheckBoxRGB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxRGBActionPerformed(evt);
-            }
-        });
-
-        jCheckBoxRGBSkeleton.setText("Skeleton Image");
-        jCheckBoxRGBSkeleton.setEnabled(false);
-
-        javax.swing.GroupLayout jPanelRGBPrefLayout = new javax.swing.GroupLayout(jPanelRGBPref);
-        jPanelRGBPref.setLayout(jPanelRGBPrefLayout);
-        jPanelRGBPrefLayout.setHorizontalGroup(
-            jPanelRGBPrefLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelRGBPrefLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBoxRGB)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBoxRGBSkeleton)
-                .addContainerGap(18, Short.MAX_VALUE))
-        );
-
-        jPanelRGBPrefLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jCheckBoxRGB, jCheckBoxRGBSkeleton});
-
-        jPanelRGBPrefLayout.setVerticalGroup(
-            jPanelRGBPrefLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelRGBPrefLayout.createSequentialGroup()
-                .addGroup(jPanelRGBPrefLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBoxRGB)
-                    .addComponent(jCheckBoxRGBSkeleton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jPanelInfo.setBorder(javax.swing.BorderFactory.createTitledBorder("Info"));
-
-        javax.swing.GroupLayout jPanelInfoLayout = new javax.swing.GroupLayout(jPanelInfo);
-        jPanelInfo.setLayout(jPanelInfoLayout);
-        jPanelInfoLayout.setHorizontalGroup(
-            jPanelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 229, Short.MAX_VALUE)
-        );
-        jPanelInfoLayout.setVerticalGroup(
-            jPanelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 99, Short.MAX_VALUE)
-        );
-
         jPanelData.setBorder(javax.swing.BorderFactory.createTitledBorder("Data"));
 
         jLabelPath.setText("Path:");
@@ -499,37 +425,22 @@ public class RecorderUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanelRGBPref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanelDepthPref, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanelInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jPanelRecording, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelDepthPref, javax.swing.GroupLayout.DEFAULT_SIZE, 561, Short.MAX_VALUE)
+                    .addComponent(jPanelRecording, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanelData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jPanelDepthPref, jPanelRGBPref});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanelDepthPref, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanelRGBPref, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanelInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanelDepthPref, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelRecording, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelData, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jPanelDepthPref, jPanelRGBPref});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -555,10 +466,6 @@ public class RecorderUI extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jButtonStartActionPerformed
-
-    private void jCheckBoxRGBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxRGBActionPerformed
-        // TODO implement RGB viewer:
-    }//GEN-LAST:event_jCheckBoxRGBActionPerformed
 
     private void jCheckBoxDepthSkeletonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxDepthSkeletonActionPerformed
         this.userTracker.setDrawSkeleton(jCheckBoxDepthSkeleton.isSelected());
@@ -784,8 +691,6 @@ public class RecorderUI extends javax.swing.JFrame {
     private javax.swing.JButton jButtonStop;
     private javax.swing.JCheckBox jCheckBoxDepth;
     private javax.swing.JCheckBox jCheckBoxDepthSkeleton;
-    private javax.swing.JCheckBox jCheckBoxRGB;
-    private javax.swing.JCheckBox jCheckBoxRGBSkeleton;
     private javax.swing.JLabel jLabelCurrent;
     private javax.swing.JLabel jLabelDelay;
     private javax.swing.JLabel jLabelFileName;
@@ -801,8 +706,6 @@ public class RecorderUI extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanelData;
     private javax.swing.JPanel jPanelDepthPref;
-    private javax.swing.JPanel jPanelInfo;
-    private javax.swing.JPanel jPanelRGBPref;
     private javax.swing.JPanel jPanelRecButtons;
     private javax.swing.JPanel jPanelRecording;
     private javax.swing.JScrollPane jScrollPaneRecordings;

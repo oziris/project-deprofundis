@@ -34,6 +34,7 @@ import kinect.storage.KinectStorageProtos.Frame;
 import kinect.storage.KinectStorageProtos.Skeleton;
 import kinect.storage.KinectStorageProtos.Joint;
 import kinect.storage.KinectStorageProtos.FOV;
+import kinect.storage.KinectStorageProtos.Orientation;
 //import kinect.storage.KinectStorageProtos.Point3D;
 
 public class UserTracker extends Component {
@@ -471,6 +472,21 @@ public class UserTracker extends Component {
             joint.setRealWorld(convertPoint3D(pos.getPosition()));
             joint.setProjective(convertPoint3D(depthGen.convertRealWorldToProjective(pos.getPosition())));
             joint.setConfidence(pos.getConfidence());
+            // Add orientation
+            Orientation.Builder orienatation = Orientation.newBuilder();
+            SkeletonJointOrientation or = skeletonCap.getSkeletonJointOrientation(user, sj);
+            orienatation.setX1(or.getX1());
+            orienatation.setX2(or.getX2());
+            orienatation.setX3(or.getX3());
+            orienatation.setY1(or.getY1());
+            orienatation.setY2(or.getY2());
+            orienatation.setY3(or.getY3());
+            orienatation.setZ1(or.getZ1());
+            orienatation.setZ2(or.getZ2());
+            orienatation.setZ3(or.getZ3());
+            orienatation.setConfidence(or.getConfidence());
+            orienatation.build();
+            joint.setOrientation(orienatation);
         } catch (StatusException ex) {
             ex.printStackTrace();
         }

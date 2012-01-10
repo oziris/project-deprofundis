@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
@@ -20,7 +21,8 @@ import kinect.util.PrintfFormat;
  * @author samo
  */
 public class Viewer extends javax.swing.JFrame {
-    String[] labels = {"none","gest1","gest2","gest3","gest4","gest5","gest6"};
+    String[] recordLabels = {"none","gest1","gest2","gest3","gest4","gest5","gest6"};
+    String[] frameLabels = {"none","gest1","gest2","gest3","gest4","gest5","gest6"};
     KinectPreferences preferences;
     //String recPath = "/home/samo/recordings/";
     String recPath;
@@ -81,15 +83,15 @@ public class Viewer extends javax.swing.JFrame {
         jPanelPreview = new javax.swing.JPanel();
         jScrollPanePreview = new javax.swing.JScrollPane();
         jPanelContainer = new javax.swing.JPanel();
-        jPanelLabel = new javax.swing.JPanel();
-        jPanelLabelAux = new javax.swing.JPanel();
-        jLabelLabelId = new javax.swing.JLabel();
-        jLabelLabelValue = new javax.swing.JLabel();
-        jScrollPaneLabels = new javax.swing.JScrollPane();
-        jListLabels = new javax.swing.JList();
-        jPanelManipulate = new javax.swing.JPanel();
-        jPanelEdit = new javax.swing.JPanel();
-        jButtonEdit = new javax.swing.JButton();
+        jPanelRecordLabel = new javax.swing.JPanel();
+        jPanelRecordLabelAux = new javax.swing.JPanel();
+        jLabelRecordLabelId = new javax.swing.JLabel();
+        jLabelRecordLabelValue = new javax.swing.JLabel();
+        jScrollPaneRecordLabels = new javax.swing.JScrollPane();
+        jListRecordLabels = new javax.swing.JList();
+        jPanelFrame = new javax.swing.JPanel();
+        jPanelFrameEdit = new javax.swing.JPanel();
+        jButtonFrameEdit = new javax.swing.JButton();
         jLabelFrameId = new javax.swing.JLabel();
         jLabelFrameValue = new javax.swing.JLabel();
         jPanelNewSequence = new javax.swing.JPanel();
@@ -99,28 +101,21 @@ public class Viewer extends javax.swing.JFrame {
         jButtonStartSet = new javax.swing.JButton();
         jLabelEndValue = new javax.swing.JLabel();
         jButtonEndSet = new javax.swing.JButton();
-        jButtonNewSequence = new javax.swing.JButton();
+        jButtonReset = new javax.swing.JButton();
         jButtonSaveNewSequence = new javax.swing.JButton();
         jLabelTotalId = new javax.swing.JLabel();
         jLabelTotalValue = new javax.swing.JLabel();
-        jSeparatorManipulate = new javax.swing.JSeparator();
+        jButtonSaveChanges = new javax.swing.JButton();
+        jScrollPaneFrameLabel = new javax.swing.JScrollPane();
+        jListFrameLabels = new javax.swing.JList();
+        jLabelFrameLabel = new javax.swing.JLabel();
+        jLabelFrameLabelValue = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
         jPanelProjective.setBorder(javax.swing.BorderFactory.createTitledBorder("Projective View"));
         jPanelProjective.setPreferredSize(new java.awt.Dimension(659, 525));
-
-        javax.swing.GroupLayout jPanelProjectiveLayout = new javax.swing.GroupLayout(jPanelProjective);
-        jPanelProjective.setLayout(jPanelProjectiveLayout);
-        jPanelProjectiveLayout.setHorizontalGroup(
-            jPanelProjectiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 647, Short.MAX_VALUE)
-        );
-        jPanelProjectiveLayout.setVerticalGroup(
-            jPanelProjectiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 502, Short.MAX_VALUE)
-        );
 
         jPanelRecordings.setBorder(javax.swing.BorderFactory.createTitledBorder("Recordings"));
         jPanelRecordings.setPreferredSize(new java.awt.Dimension(250, 450));
@@ -297,7 +292,7 @@ public class Viewer extends javax.swing.JFrame {
         jPanelFramesLayout.setVerticalGroup(
             jPanelFramesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelFramesLayout.createSequentialGroup()
-                .addComponent(jScrollPaneFrames, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
+                .addComponent(jScrollPaneFrames, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelFramesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jButtonPrevious)
@@ -311,6 +306,7 @@ public class Viewer extends javax.swing.JFrame {
         jScrollPanePreview.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         jScrollPanePreview.setViewportBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jScrollPanePreview.setDoubleBuffered(true);
+        jScrollPanePreview.setOpaque(false);
 
         jPanelContainer.setMinimumSize(new java.awt.Dimension(0, 0));
         jPanelContainer.setOpaque(false);
@@ -321,70 +317,80 @@ public class Viewer extends javax.swing.JFrame {
         jPanelPreview.setLayout(jPanelPreviewLayout);
         jPanelPreviewLayout.setHorizontalGroup(
             jPanelPreviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPanePreview, javax.swing.GroupLayout.PREFERRED_SIZE, 647, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanelPreviewLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPanePreview, javax.swing.GroupLayout.PREFERRED_SIZE, 635, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelPreviewLayout.setVerticalGroup(
             jPanelPreviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPanePreview, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanelPreviewLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPanePreview, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        jPanelLabel.setBorder(javax.swing.BorderFactory.createTitledBorder("Label "));
+        jPanelRecordLabel.setBorder(javax.swing.BorderFactory.createTitledBorder("Record Label "));
 
-        jPanelLabelAux.setLayout(new java.awt.GridBagLayout());
+        jPanelRecordLabelAux.setLayout(new java.awt.GridBagLayout());
 
-        jLabelLabelId.setText("Current label:");
+        jLabelRecordLabelId.setText("Label:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanelLabelAux.add(jLabelLabelId, gridBagConstraints);
+        jPanelRecordLabelAux.add(jLabelRecordLabelId, gridBagConstraints);
+
+        jLabelRecordLabelValue.setText("none");
+        jLabelRecordLabelValue.setToolTipText("");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanelLabelAux.add(jLabelLabelValue, gridBagConstraints);
+        jPanelRecordLabelAux.add(jLabelRecordLabelValue, gridBagConstraints);
 
-        jScrollPaneLabels.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPaneRecordLabels.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPaneRecordLabels.setPreferredSize(null);
 
-        jListLabels.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jListLabels.setToolTipText("Set label");
-        jListLabels.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        jListRecordLabels.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jListRecordLabels.setToolTipText("Set record label");
+        jListRecordLabels.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jListLabelsValueChanged(evt);
+                jListRecordLabelsValueChanged(evt);
             }
         });
-        jScrollPaneLabels.setViewportView(jListLabels);
+        jScrollPaneRecordLabels.setViewportView(jListRecordLabels);
 
-        javax.swing.GroupLayout jPanelLabelLayout = new javax.swing.GroupLayout(jPanelLabel);
-        jPanelLabel.setLayout(jPanelLabelLayout);
-        jPanelLabelLayout.setHorizontalGroup(
-            jPanelLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelLabelLayout.createSequentialGroup()
+        javax.swing.GroupLayout jPanelRecordLabelLayout = new javax.swing.GroupLayout(jPanelRecordLabel);
+        jPanelRecordLabel.setLayout(jPanelRecordLabelLayout);
+        jPanelRecordLabelLayout.setHorizontalGroup(
+            jPanelRecordLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelRecordLabelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneLabels, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
-                    .addComponent(jPanelLabelAux, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE))
+                .addGroup(jPanelRecordLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPaneRecordLabels, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+                    .addComponent(jPanelRecordLabelAux, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
-        jPanelLabelLayout.setVerticalGroup(
-            jPanelLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelLabelLayout.createSequentialGroup()
-                .addComponent(jPanelLabelAux, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+        jPanelRecordLabelLayout.setVerticalGroup(
+            jPanelRecordLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelRecordLabelLayout.createSequentialGroup()
+                .addComponent(jPanelRecordLabelAux, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneLabels, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                .addComponent(jScrollPaneRecordLabels, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jPanelManipulate.setBorder(javax.swing.BorderFactory.createTitledBorder("Manipulate"));
-        jPanelManipulate.setPreferredSize(new java.awt.Dimension(0, 0));
+        jPanelFrame.setBorder(javax.swing.BorderFactory.createTitledBorder("Frame"));
+        jPanelFrame.setPreferredSize(new java.awt.Dimension(0, 0));
 
-        jPanelEdit.setLayout(new java.awt.GridBagLayout());
+        jPanelFrameEdit.setLayout(new java.awt.GridBagLayout());
 
-        jButtonEdit.setText("Edit");
-        jButtonEdit.setToolTipText("Edit selected frame");
-        jButtonEdit.addActionListener(new java.awt.event.ActionListener() {
+        jButtonFrameEdit.setText("Edit");
+        jButtonFrameEdit.setToolTipText("Edit selected frame");
+        jButtonFrameEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonEditActionPerformed(evt);
+                jButtonFrameEditActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -392,14 +398,14 @@ public class Viewer extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.ipadx = 51;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanelEdit.add(jButtonEdit, gridBagConstraints);
+        jPanelFrameEdit.add(jButtonFrameEdit, gridBagConstraints);
 
-        jLabelFrameId.setText("Frame: ");
+        jLabelFrameId.setText("Id: ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanelEdit.add(jLabelFrameId, gridBagConstraints);
+        jPanelFrameEdit.add(jLabelFrameId, gridBagConstraints);
 
         jLabelFrameValue.setText("none");
         jLabelFrameValue.setMaximumSize(new java.awt.Dimension(40, 17));
@@ -409,7 +415,7 @@ public class Viewer extends javax.swing.JFrame {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanelEdit.add(jLabelFrameValue, gridBagConstraints);
+        jPanelFrameEdit.add(jLabelFrameValue, gridBagConstraints);
 
         jPanelNewSequence.setLayout(new java.awt.GridBagLayout());
 
@@ -473,20 +479,19 @@ public class Viewer extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelNewSequence.add(jButtonEndSet, gridBagConstraints);
 
-        jButtonNewSequence.setText("New Seqeunce");
-        jButtonNewSequence.addActionListener(new java.awt.event.ActionListener() {
+        jButtonReset.setText("Reset");
+        jButtonReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonNewSequenceActionPerformed(evt);
+                jButtonResetActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanelNewSequence.add(jButtonNewSequence, gridBagConstraints);
+        jPanelNewSequence.add(jButtonReset, gridBagConstraints);
 
-        jButtonSaveNewSequence.setText("Save");
+        jButtonSaveNewSequence.setText("New");
         jButtonSaveNewSequence.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveNewSequenceActionPerformed(evt);
@@ -495,7 +500,6 @@ public class Viewer extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.ipadx = 13;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelNewSequence.add(jButtonSaveNewSequence, gridBagConstraints);
@@ -512,33 +516,63 @@ public class Viewer extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelNewSequence.add(jLabelTotalValue, gridBagConstraints);
 
-        javax.swing.GroupLayout jPanelManipulateLayout = new javax.swing.GroupLayout(jPanelManipulate);
-        jPanelManipulate.setLayout(jPanelManipulateLayout);
-        jPanelManipulateLayout.setHorizontalGroup(
-            jPanelManipulateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelManipulateLayout.createSequentialGroup()
-                .addGroup(jPanelManipulateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanelEdit, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelManipulateLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanelManipulateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jSeparatorManipulate, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanelNewSequence, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        jButtonSaveChanges.setText("Save");
+        jButtonSaveChanges.setEnabled(false);
+        jButtonSaveChanges.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSaveChangesActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        jPanelNewSequence.add(jButtonSaveChanges, gridBagConstraints);
+
+        jListFrameLabels.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jListFrameLabels.setToolTipText("Set frame label");
+        jListFrameLabels.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jListFrameLabelsValueChanged(evt);
+            }
+        });
+        jScrollPaneFrameLabel.setViewportView(jListFrameLabels);
+
+        jLabelFrameLabel.setText("Label:");
+
+        jLabelFrameLabelValue.setText("none");
+
+        javax.swing.GroupLayout jPanelFrameLayout = new javax.swing.GroupLayout(jPanelFrame);
+        jPanelFrame.setLayout(jPanelFrameLayout);
+        jPanelFrameLayout.setHorizontalGroup(
+            jPanelFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelFrameLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPaneFrameLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+                    .addComponent(jPanelNewSequence, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+                    .addComponent(jPanelFrameEdit, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelFrameLayout.createSequentialGroup()
+                        .addComponent(jLabelFrameLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelFrameLabelValue)))
                 .addContainerGap())
         );
-        jPanelManipulateLayout.setVerticalGroup(
-            jPanelManipulateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelManipulateLayout.createSequentialGroup()
-                .addComponent(jPanelEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        jPanelFrameLayout.setVerticalGroup(
+            jPanelFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelFrameLayout.createSequentialGroup()
+                .addComponent(jPanelFrameEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelFrameLabel)
+                    .addComponent(jLabelFrameLabelValue))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparatorManipulate, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPaneFrameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelNewSequence, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(168, Short.MAX_VALUE))
+                .addComponent(jPanelNewSequence, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -551,14 +585,14 @@ public class Viewer extends javax.swing.JFrame {
                     .addComponent(jPanelFrames, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanelRecordings, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanelProjective, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanelPreview, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanelProjective, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
+                    .addComponent(jPanelPreview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanelLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanelPlay, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
-                    .addComponent(jPanelManipulate, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE))
+                    .addComponent(jPanelFrame, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
+                    .addComponent(jPanelRecordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelPlay, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -569,16 +603,16 @@ public class Viewer extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanelPlay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanelLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanelRecordLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanelManipulate, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE))
+                        .addComponent(jPanelFrame, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jPanelProjective, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanelRecordings, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanelRecordings, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanelPreview, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+                            .addComponent(jPanelPreview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanelFrames, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
@@ -664,13 +698,13 @@ public class Viewer extends javax.swing.JFrame {
         jButtonPlay.setEnabled(true);
     }//GEN-LAST:event_jButtonStopActionPerformed
 
-    private void jButtonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditActionPerformed
+    private void jButtonFrameEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFrameEditActionPerformed
         if(skeletonProjective != null)  {
             new SkeletonEdit(skeletonProjective.getCurrentFrame()).setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "Error", "No frame selected!", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_jButtonEditActionPerformed
+    }//GEN-LAST:event_jButtonFrameEditActionPerformed
 
     private void jButtonStartSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartSetActionPerformed
         if(frameSelected != null) {
@@ -703,13 +737,13 @@ public class Viewer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonEndSetActionPerformed
 
-    private void jButtonNewSequenceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewSequenceActionPerformed
+    private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
         frameStart = null;
         frameEnd = null;
         jLabelTotalValue.setText("none");
         jLabelStartValue.setText("none");
         jLabelEndValue.setText("none");
-    }//GEN-LAST:event_jButtonNewSequenceActionPerformed
+    }//GEN-LAST:event_jButtonResetActionPerformed
 
     private void jButtonSaveNewSequenceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveNewSequenceActionPerformed
         try{
@@ -731,19 +765,48 @@ public class Viewer extends javax.swing.JFrame {
         cretePreview();
     }//GEN-LAST:event_jButtonRefreshActionPerformed
 
-    private void jListLabelsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListLabelsValueChanged
+    private void jListRecordLabelsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListRecordLabelsValueChanged
         if(! evt.getValueIsAdjusting()) return;
         
-        if(! jListLabels.isSelectionEmpty() ) {
-            jLabelLabelValue.setText((String)jListLabels.getSelectedValue());
-            change = true;
-//            skeletonProjective.selectFrame(jListFrames.getSelectedIndex());
-//            frameSelected = skeletonProjective.getCurrentFrame();
-//            jLabelFrameValue.setText(Integer.toString(frameSelected.getNumber()));
-//            jPanelProjective.repaint();
-//            setPreviewSelected();
+        String s;
+        if(! jListRecordLabels.isSelectionEmpty() ) {
+            if(! (s = (String)jListRecordLabels.getSelectedValue()).equalsIgnoreCase(jLabelRecordLabelValue.getText()) ) {
+                jLabelRecordLabelValue.setText(s);
+                change = true;
+                jButtonSaveChanges.setEnabled(true);
+                
+                Sequence.Builder seq = sequence.toBuilder();
+                seq.setLabel(s);
+                sequence = seq.build();
+            }
         }
-    }//GEN-LAST:event_jListLabelsValueChanged
+    }//GEN-LAST:event_jListRecordLabelsValueChanged
+
+    private void jListFrameLabelsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListFrameLabelsValueChanged
+        if(! evt.getValueIsAdjusting()) return;
+        
+        String s;
+        if(! jListFrameLabels.isSelectionEmpty() ) {
+            if(! (s = (String)jListFrameLabels.getSelectedValue()).equalsIgnoreCase(jLabelFrameLabelValue.getText()) ) {
+                jLabelFrameLabelValue.setText(s);
+                change = true;
+                jButtonSaveChanges.setEnabled(true);
+            }
+        }
+    }//GEN-LAST:event_jListFrameLabelsValueChanged
+
+    private void jButtonSaveChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveChangesActionPerformed
+        FileOutputStream output;
+        try {
+            output = new FileOutputStream(recording);
+            sequence.writeTo(output);
+            output.close();
+            System.out.println("File "+recording.getName()+" saved.");
+        } catch (IOException ex) {
+            System.err.println("Error: file "+recording.getName()+" not saved!");
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jButtonSaveChangesActionPerformed
         
     /**
      * Initial Load
@@ -755,7 +818,8 @@ public class Viewer extends javax.swing.JFrame {
         setLocation(Integer.parseInt(preferences.getProperty("ViewerWindowPositionX")), 
                     Integer.parseInt(preferences.getProperty("ViewerWindowPositionY")));
         
-        createLabelList();
+        createRecordLabelList();
+        createFrameLabelList();
         
         // Recordings
         setRecPath(preferences.getProperty("REC"));
@@ -814,9 +878,9 @@ public class Viewer extends javax.swing.JFrame {
             skeletonProjective.setNewSequence(this.sequence);
             String label = sequence.getLabel();
             if(label == null || label.equals("")) {
-                jLabelLabelValue.setText("none");
+                jLabelRecordLabelValue.setText("none");
             } else {
-                jLabelLabelValue.setText(label);
+                jLabelRecordLabelValue.setText(label);
             }
             //System.out.println("Open: "+sequence.getName());
         } catch (IOException ex) {
@@ -851,10 +915,16 @@ public class Viewer extends javax.swing.JFrame {
         //System.out.println("createFrameList: "+sequence.getName());
     }
     
-    private void createLabelList() {
-        java.util.Arrays.sort(labels);
-        jListLabels.setListData(labels);
+    private void createRecordLabelList() {
+        java.util.Arrays.sort(recordLabels);
+        jListRecordLabels.setListData(recordLabels);
     }
+    
+    private void createFrameLabelList() {
+        java.util.Arrays.sort(frameLabels);
+        jListFrameLabels.setListData(frameLabels);
+    }
+    
     
     /*
      * 
@@ -919,7 +989,7 @@ public class Viewer extends javax.swing.JFrame {
     }
     
     public String getSequenceLabel() {
-        return jLabelLabelValue.getText();
+        return jLabelRecordLabelValue.getText();
     }
     
     /*
@@ -972,13 +1042,14 @@ public class Viewer extends javax.swing.JFrame {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonEdit;
     private javax.swing.JButton jButtonEndSet;
-    private javax.swing.JButton jButtonNewSequence;
+    private javax.swing.JButton jButtonFrameEdit;
     private javax.swing.JButton jButtonNext;
     private javax.swing.JButton jButtonPlay;
     private javax.swing.JButton jButtonPrevious;
     private javax.swing.JButton jButtonRefresh;
+    private javax.swing.JButton jButtonReset;
+    private javax.swing.JButton jButtonSaveChanges;
     private javax.swing.JButton jButtonSaveNewSequence;
     private javax.swing.JButton jButtonSetPath;
     private javax.swing.JButton jButtonStartSet;
@@ -988,34 +1059,37 @@ public class Viewer extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelEndValue;
     private javax.swing.JLabel jLabelFPS;
     private javax.swing.JLabel jLabelFrameId;
+    private javax.swing.JLabel jLabelFrameLabel;
+    private javax.swing.JLabel jLabelFrameLabelValue;
     private javax.swing.JLabel jLabelFrameValue;
-    private javax.swing.JLabel jLabelLabelId;
-    private javax.swing.JLabel jLabelLabelValue;
+    private javax.swing.JLabel jLabelRecordLabelId;
+    private javax.swing.JLabel jLabelRecordLabelValue;
     private javax.swing.JLabel jLabelStartId;
     private javax.swing.JLabel jLabelStartValue;
     private javax.swing.JLabel jLabelTotalId;
     private javax.swing.JLabel jLabelTotalValue;
+    private javax.swing.JList jListFrameLabels;
     private javax.swing.JList jListFrames;
-    private javax.swing.JList jListLabels;
+    private javax.swing.JList jListRecordLabels;
     private javax.swing.JList jListRecordings;
     private javax.swing.JPanel jPanelContainer;
-    private javax.swing.JPanel jPanelEdit;
+    private javax.swing.JPanel jPanelFrame;
+    private javax.swing.JPanel jPanelFrameEdit;
     private javax.swing.JPanel jPanelFrames;
-    private javax.swing.JPanel jPanelLabel;
-    private javax.swing.JPanel jPanelLabelAux;
-    private javax.swing.JPanel jPanelManipulate;
     private javax.swing.JPanel jPanelNewSequence;
     private javax.swing.JPanel jPanelPlay;
     private javax.swing.JPanel jPanelPlayAux;
     private javax.swing.JPanel jPanelPreview;
     private javax.swing.JPanel jPanelProjective;
     private javax.swing.JPanel jPanelRecListButton;
+    private javax.swing.JPanel jPanelRecordLabel;
+    private javax.swing.JPanel jPanelRecordLabelAux;
     private javax.swing.JPanel jPanelRecordings;
+    private javax.swing.JScrollPane jScrollPaneFrameLabel;
     private javax.swing.JScrollPane jScrollPaneFrames;
-    private javax.swing.JScrollPane jScrollPaneLabels;
     private javax.swing.JScrollPane jScrollPanePreview;
+    private javax.swing.JScrollPane jScrollPaneRecordLabels;
     private javax.swing.JScrollPane jScrollPaneRecordings;
-    private javax.swing.JSeparator jSeparatorManipulate;
     private javax.swing.JTextField jTextFieldPath;
     // End of variables declaration//GEN-END:variables
 }

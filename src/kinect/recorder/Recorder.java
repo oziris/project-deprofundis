@@ -40,8 +40,6 @@ public class Recorder {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(RecorderUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        
-        // TODO: open oni recordings
                 
         JFrame f = new JFrame("OpenNI User Tracker");
         f.setResizable(false);

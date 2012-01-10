@@ -10,6 +10,20 @@ message Point3D {
     required float Z = 3;
 }
 
+
+message Orientation {
+	required float X1 = 1;
+	required float Y1 = 2;
+	required float Z1 = 3;
+	required float X2 = 4;
+	required float Y2 = 5;
+	required float Z2 = 6;
+	required float X3 = 7;
+	required float Y3 = 8;
+	required float Z3 = 9;
+	required float confidence = 10;
+}
+
 message Joint {
     optional Point3D realWorld = 1;
     optional Point3D projective = 2;
@@ -47,6 +61,7 @@ message Joint {
     }
 
     required JointType type = 4;
+	optional Orientation orientation = 5;
 }
 
 message Skeleton {

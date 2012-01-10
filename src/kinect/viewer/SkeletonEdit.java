@@ -150,6 +150,7 @@ public class SkeletonEdit extends javax.swing.JFrame {
         c.gridx = 3;
         jPanelSkeleton.add(new JLabel("Confidence"),c);
 
+        c.ipady = 5;
         for(Joint joint:skeleton.getJointsList()) {
             c.fill = GridBagConstraints.HORIZONTAL;
             c.gridy++;
@@ -163,6 +164,7 @@ public class SkeletonEdit extends javax.swing.JFrame {
              * Projective 
              */
             c.gridx = 1;
+            c.fill = GridBagConstraints.CENTER;
             //panel.add(new JLabel(jointNameMap.get(joint.getType())));
             point = joint.getProjective();
             
@@ -176,34 +178,44 @@ public class SkeletonEdit extends javax.swing.JFrame {
             /*
              * Real World 
              */
+//            c.gridx = 2;
+//            panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+//            point = joint.getRealWorld();
+//            label = new JLabel(" x: "); 
+//            panel.add(label);
+//            textField = new JFormattedTextField(nf1);
+//            textField.setValue(point.getX());
+//            panel.add(textField);
+//            label = new JLabel(" y: "); 
+//            panel.add(label);
+//            textField = new JFormattedTextField(nf1);
+//            textField.setValue(point.getY());
+//            panel.add(textField);
+//            label = new JLabel(" z: "); 
+//            panel.add(label);
+//            textField = new JFormattedTextField(nf2);
+//            textField.setValue(point.getZ());
+//            panel.add(textField);
+//            jPanelSkeleton.add(panel,c);
+            
             c.gridx = 2;
-            panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            c.fill = GridBagConstraints.CENTER;
             point = joint.getRealWorld();
-            label = new JLabel(" x: "); 
-            panel.add(label);
-            textField = new JFormattedTextField(nf1);
-            textField.setValue(point.getX());
-            panel.add(textField);
-            label = new JLabel(" y: "); 
-            panel.add(label);
-            textField = new JFormattedTextField(nf1);
-            textField.setValue(point.getY());
-            panel.add(textField);
-            label = new JLabel(" z: "); 
-            panel.add(label);
-            textField = new JFormattedTextField(nf2);
-            textField.setValue(point.getZ());
-            panel.add(textField);
-            jPanelSkeleton.add(panel,c);
+            jPanelSkeleton.add(new JLabel("   [x: "+pf1.sprintf(point.getX())+
+                                ", y: "+pf1.sprintf(point.getY())+
+                                ", z: "+pf2.sprintf(point.getZ())+"]  "),c);
             
             /*
              * Confidence
              */
+//            c.fill = GridBagConstraints.CENTER;
+//            c.gridx = 3;
+//            textField = new JFormattedTextField(nf3);
+//            textField.setValue(joint.getConfidence());
+//            jPanelSkeleton.add(textField,c);
             c.fill = GridBagConstraints.CENTER;
             c.gridx = 3;
-            textField = new JFormattedTextField(nf3);
-            textField.setValue(joint.getConfidence());
-            jPanelSkeleton.add(textField,c);
+            jPanelSkeleton.add(new JLabel("   [x: "+pf1.sprintf(joint.getConfidence())+"]  "),c);
         }
         
         this.validate();

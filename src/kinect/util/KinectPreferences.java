@@ -102,6 +102,8 @@ public class KinectPreferences {
                 properties.setProperty("ViewerWindowPositionY", "50");
                 properties.setProperty("RecorderWindowPositionX", "50");
                 properties.setProperty("RecorderWindowPositionY", "50");
+                properties.setProperty("RecordingLabels", "none;gest1;gest2;gest3;gest4;gest5;gest6");
+                properties.setProperty("FrameLabels", "none;gest1;gest2;gest3;gest4;gest5;gest6");
                 save();
             } else {
                 ex.printStackTrace();
@@ -121,6 +123,14 @@ public class KinectPreferences {
     
     public String getProperty(String key) {
         return properties.getProperty(key);
+    }
+    
+    public String[] getRecordingLabels() {
+        return properties.getProperty("RecordingLabels").split(";");
+    }
+    
+    public String[] getFrameLabels() {
+        return properties.getProperty("FrameLabels").split(";");
     }
     
     /**

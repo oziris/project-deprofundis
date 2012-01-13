@@ -21,8 +21,10 @@ import kinect.util.PrintfFormat;
  * @author samo
  */
 public class Viewer extends javax.swing.JFrame {
-    String[] recordLabels = {"none","gest1","gest2","gest3","gest4","gest5","gest6"};
-    String[] frameLabels = {"none","gest1","gest2","gest3","gest4","gest5","gest6"};
+//    String[] recordLabels = {"none","gest1","gest2","gest3","gest4","gest5","gest6"};
+//    String[] frameLabels = {"none","gest1","gest2","gest3","gest4","gest5","gest6"};
+    String[] recordLabels;
+    String[] frameLabels;
     KinectPreferences preferences;
     //String recPath = "/home/samo/recordings/";
     String recPath;
@@ -43,6 +45,8 @@ public class Viewer extends javax.swing.JFrame {
         // Load preferences
         preferences = new KinectPreferences();
         preferences.load();
+        recordLabels = preferences.getRecordingLabels();
+        frameLabels = preferences.getFrameLabels();
         
         // Init Viewer components
         initComponents();

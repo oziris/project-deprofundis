@@ -659,7 +659,7 @@ public class Viewer extends javax.swing.JFrame {
         if(! jListFrames.isSelectionEmpty() ) {
             skeletonProjective.selectFrame(jListFrames.getSelectedIndex());
             frameSelected = skeletonProjective.getCurrentFrame();
-            jLabelFrameValue.setText(Integer.toString(frameSelected.getNumber()));
+            showFrameLabel();
             jPanelProjective.repaint();
             setPreviewSelected();
         }
@@ -791,6 +791,28 @@ public class Viewer extends javax.swing.JFrame {
                 jLabelFrameLabelValue.setText(s);
                 change = true;
                 jButtonSaveChanges.setEnabled(true);
+                
+                if(frameStart != null && frameEnd != null) 
+                // Multiple frames
+                {
+                    Sequence.Builder seq = sequence.toBuilder();
+                    for(Frame fr : seq.getFrameList()) {
+                        if(fr.getNumber() >= frameStart.getNumber() && fr.getNumber() <= frameEnd.getNumber()) {
+                            Frame.Builder tmpFr = fr.toBuilder();
+                            tmpFr.setLabel(s);
+                            seq.setFrame(fr.getNumber()-1, tmpFr.build());
+                        }
+                    }
+                    sequence = seq.build();
+                } else if (frameSelected != null) 
+                // Single frame
+                {
+                    Sequence.Builder seq = sequence.toBuilder();
+                    Frame.Builder fr = seq.getFrame(frameSelected.getNumber()).toBuilder();
+                    fr.setLabel(s);
+                    seq.setFrame(fr.getNumber()-1, fr.build());
+                    sequence = seq.build();
+                }
             }
         }
     }//GEN-LAST:event_jListFrameLabelsValueChanged
@@ -801,6 +823,7 @@ public class Viewer extends javax.swing.JFrame {
             output = new FileOutputStream(recording);
             sequence.writeTo(output);
             output.close();
+            jButtonSaveChanges.setEnabled(false);
             System.out.println("File "+recording.getName()+" saved.");
         } catch (IOException ex) {
             System.err.println("Error: file "+recording.getName()+" not saved!");
@@ -839,9 +862,6 @@ public class Viewer extends javax.swing.JFrame {
         cretePreview();
     }  
     
-    /**
-     * 
-     */
     private void setRecPath(String path) {
         // TODO: check if valid recording path
         jTextFieldPath.setText(path);
@@ -875,7 +895,7 @@ public class Viewer extends javax.swing.JFrame {
         recording = new File(recPath+File.separator+(String)jListRecordings.getSelectedValue());  
         try {    
             sequence = Sequence.parseFrom(new FileInputStream(recording));
-            skeletonProjective.setNewSequence(this.sequence);
+            skeletonProjective.setNewSequence(sequence);
             String label = sequence.getLabel();
             if(label == null || label.equals("")) {
                 jLabelRecordLabelValue.setText("none");
@@ -888,10 +908,6 @@ public class Viewer extends javax.swing.JFrame {
         }
     }
         
-        
-    /*
-     * 
-     */
     private void createFrameList() {
         idToFrame.clear();
         PrintfFormat pf = new PrintfFormat("%4d");
@@ -904,9 +920,9 @@ public class Viewer extends javax.swing.JFrame {
         }
         
         frameSelected = sequence.getFrame(0);
-        jLabelFrameValue.setText(Integer.toString(frameSelected.getNumber()));
         jListFrames.setListData(framesString); 
         jListFrames.setSelectedIndex(skeletonProjective.firstFrameIndex()-1);
+        showFrameLabel();
         
         jButtonNext.setEnabled(true);
         jButtonPrevious.setEnabled(true);
@@ -925,10 +941,22 @@ public class Viewer extends javax.swing.JFrame {
         jListFrameLabels.setListData(frameLabels);
     }
     
+    private void showFrameLabel() {
+        if(frameSelected != null) {
+            jLabelFrameValue.setText(Integer.toString(frameSelected.getNumber()));
+            String s = frameSelected.getLabel();
+            if (s.equalsIgnoreCase("") || s == null) {
+                jListFrameLabels.clearSelection();
+                jLabelFrameLabelValue.setText("");
+            } else {
+                jLabelFrameLabelValue.setText(s);
+            }
+        } else {
+            jListFrameLabels.clearSelection();
+            jLabelFrameLabelValue.setText("");
+        }
+    }
     
-    /*
-     * 
-     */
     private void cretePreview() {
         // System.out.println("cretePreview");      
         int w = 200, h = (int) (w * 0.75);
@@ -962,7 +990,7 @@ public class Viewer extends javax.swing.JFrame {
         }
     };
     
-    /*
+    /**
      * 
      */
     public SkeletonProjective getSkeletonProjective() {
@@ -971,7 +999,7 @@ public class Viewer extends javax.swing.JFrame {
     
     public void setSkeletonProjectiveAndRepaint(Frame f) {
         frameSelected = f;
-        jLabelFrameValue.setText(Integer.toString(frameSelected.getNumber()));
+        showFrameLabel();
         jListFrames.setSelectedIndex(skeletonProjective.selectFrame(f)-1);
         jPanelProjective.repaint();
     }
